@@ -3,7 +3,20 @@
 -- Created: 2026-05-19
 
 -- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+DO $$ BEGIN
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+EXCEPTION
+    WHEN insufficient_privilege THEN
+        RAISE NOTICE 'uuid-ossp extension not available, using gen_random_uuid() instead';
+END $$;
+
+-- Use gen_random_uuid as fallback
+CREATE OR REPLACE FUNCTION uuid_generate_v4()
+RETURNS UUID AS $$
+BEGIN
+    RETURN gen_random_uuid();
+END;
+$$ LANGUAGE plpgsql STRICT;
 
 -- ============================================
 -- ENUMS
