@@ -4,14 +4,9 @@
 -- Prerequisites: Run 001_initial_schema.sql first
 
 -- ============================================
--- SPORTS (already exists, but ensure it exists)
+-- SPORTS (already exists from migration)
 -- ============================================
-
-INSERT INTO sports (id, name, slug) VALUES
-    ('11111111-1111-1111-1111-111111111111', 'Futsal', 'futsal'),
-    ('22222222-2222-2222-2222-222222222222', 'Basketball', 'basketball'),
-    ('33333333-3333-3333-3333-333333333333', 'Renang', 'renang')
-ON CONFLICT (slug) DO NOTHING;
+-- Skip - sports are created by 001_initial_schema.sql
 
 -- ============================================
 -- USERS (linked to Supabase Auth)
