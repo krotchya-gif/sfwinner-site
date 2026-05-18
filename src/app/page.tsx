@@ -1,8 +1,8 @@
-import { redirect, notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import FutsalPortalPage from './(sport)/futsal/page'
 import BasketballPortalPage from './(sport)/basketball/page'
 import RenangPortalPage from './(sport)/renang/page'
-import type { headers } from 'next/headers'
 
 // Dynamic subdomain routing
 // Subdomains:
