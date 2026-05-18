@@ -17,9 +17,9 @@ CREATE TYPE match_status AS ENUM ('scheduled', 'completed', 'cancelled', 'postpo
 -- TABLES
 -- ============================================
 
--- Users table (extends Supabase Auth)
+-- Users table (standalone - auth is handled separately)
 CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY,
     email TEXT NOT NULL,
     name TEXT,
     role user_role NOT NULL DEFAULT 'coach',
