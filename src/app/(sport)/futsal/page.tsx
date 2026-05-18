@@ -18,7 +18,7 @@ export default async function FutsalPortalPage() {
   const { data: teams } = sport
     ? await supabase
         .from('teams')
-        .select('id, name, logo_url, branch_location')
+        .select('id, name, slug, logo_url, branch_location')
         .eq('sport_id', sport.id)
         .limit(12)
     : { data: [] }

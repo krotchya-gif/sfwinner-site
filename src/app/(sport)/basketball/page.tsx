@@ -11,7 +11,7 @@ export default async function BasketballPortalPage() {
   const { data: sport } = await supabase
     .from('sports')
     .select('*')
-    .eq('slug', 'basket')
+    .eq('slug', 'basketball')
     .single()
 
   // Get teams for basketball
