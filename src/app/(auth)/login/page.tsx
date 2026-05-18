@@ -29,7 +29,23 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/dashboard')
+    // Get user role to determine redirect
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    if (authUser) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', authUser.id)
+        .single()
+
+      if (userData?.role === 'super_admin') {
+        router.push('/admin/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
+    } else {
+      router.push('/dashboard')
+    }
     router.refresh()
   }
 

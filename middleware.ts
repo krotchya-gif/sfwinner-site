@@ -33,11 +33,28 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const pathname = request.nextUrl.pathname
+  const adminPaths = ['/admin']
+  const isAdminPath = adminPaths.some(path => pathname.startsWith(path))
+
+  // Server-side role check for admin routes
+  if (isAdminPath && user) {
+    const { data: userData } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!userData || userData.role !== 'super_admin') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+  }
+
   // Protected app routes (team manager panel)
   const protectedPaths = ['/dashboard', '/players', '/age-classes', '/achievements', '/matches', '/tournaments']
-  const adminPaths = ['/admin']
-  const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
-  const isAdmin = adminPaths.some(path => request.nextUrl.pathname.startsWith(path))
+  const isProtected = protectedPaths.some(path => pathname.startsWith(path))
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone()

@@ -83,23 +83,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-light flex">
-      {/* Mobile sidebar toggle */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-dark text-white p-2 rounded-lg shadow-lg"
-      >
-        {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
+      {/* Mobile sidebar backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       {/* Sidebar */}
       <aside className={`
         fixed inset-y-0 left-0 z-40 w-64 bg-dark text-white transform transition-transform duration-200 ease-in-out
-        lg:translate-x-0 lg:static
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0 lg:static
       `}>
         <div className="flex flex-col h-full">
+          {/* Mobile header */}
+          <div className="flex items-center justify-between p-4 lg:hidden border-b border-white/10">
+            <span className="font-bold text-white">Admin Menu</span>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-2 rounded-lg hover:bg-white/10"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+          </div>
+
           {/* Logo */}
-          <div className="px-6 py-6 border-b border-white/10">
+          <div className="px-6 py-6 border-b border-white/10 hidden lg:block">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <Shield className="w-5 h-5 text-white" />
@@ -167,17 +178,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       {/* Main content */}
       <main className="flex-1 min-w-0">
-        <div className="p-6 pt-16 lg:pt-6">
+        {/* Mobile top bar */}
+        <header className="bg-dark text-white lg:hidden">
+          <div className="flex items-center justify-between px-4 py-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 rounded-lg hover:bg-white/10"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <span className="font-bold text-white">Admin Panel</span>
+            <div className="w-10" />
+          </div>
+        </header>
+        <div className="p-6">
           {children}
         </div>
       </main>

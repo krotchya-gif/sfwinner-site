@@ -11,7 +11,6 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronDown,
   Target,
   CalendarDays,
 } from 'lucide-react'
@@ -52,20 +51,32 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static inset-y-0 left-0 z-30 w-64 bg-dark text-white
+          fixed inset-y-0 left-0 z-30 w-64 bg-dark text-white
           transform transition-transform duration-200 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0 lg:static
           flex flex-col
         `}
       >
+        {/* Mobile close button */}
+        <div className="flex items-center justify-between p-4 lg:hidden border-b border-gray-700">
+          <span className="font-bold text-white">Menu</span>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="p-2 rounded-lg hover:bg-white/10"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+        </div>
+
         {/* Logo */}
-        <div className="p-6 border-b border-gray-700">
+        <div className="p-6 border-b border-gray-700 hidden lg:block">
           <h1 className="text-xl font-bold font-heading">SF WINNER</h1>
           <p className="text-sm text-gray-400">Team Manager</p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navigation.map((item) => {
             const isActive = pathname.startsWith(item.href)
             return (
@@ -102,7 +113,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
+        {/* Mobile top bar */}
         <header className="bg-white shadow-sm lg:hidden">
           <div className="flex items-center justify-between px-4 py-3">
             <button
@@ -117,7 +128,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-6 overflow-auto">
           {children}
         </main>
       </div>
