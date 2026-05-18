@@ -41,8 +41,9 @@ export default async function FutsalPortalPage() {
           id, score_home, score_away, match_date, venue, status,
           team_home:teams!matches_team_home_id_fkey (name),
           team_away:teams!matches_team_away_id_fkey (name),
-          tournament:tournaments (name)
+          tournament:tournaments (name, sport_id)
         `)
+        .eq('tournament.sport_id', sport.id)
         .eq('status', 'completed')
         .order('match_date', { ascending: false })
         .limit(6)
@@ -80,7 +81,7 @@ export default async function FutsalPortalPage() {
             Futsal Portal
           </h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Temukan jadwal pertandingan, lihat hasil, dan追踪 tim favoritmu di SF Winner Futsal
+            Temukan jadwal pertandingan, lihat hasil, dan tim favoritmu di SF Winner Futsal
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link href="#teams" className="bg-white text-primary font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition flex items-center gap-2">

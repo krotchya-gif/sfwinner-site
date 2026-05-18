@@ -41,8 +41,9 @@ export default async function RenangPortalPage() {
           id, score_home, score_away, match_date, venue, status,
           team_home:teams!matches_team_home_id_fkey (name),
           team_away:teams!matches_team_away_id_fkey (name),
-          tournament:tournaments (name)
+          tournament:tournaments (name, sport_id)
         `)
+        .eq('tournament.sport_id', sport.id)
         .eq('status', 'completed')
         .order('match_date', { ascending: false })
         .limit(6)

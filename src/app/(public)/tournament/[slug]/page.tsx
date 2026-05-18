@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import { Calendar, MapPin, Users, ArrowLeft, Trophy } from 'lucide-react'
+import TournamentContent from '@/components/tournament/TournamentContent'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -42,9 +43,7 @@ export default async function TournamentDetailPage({ params }: PageProps) {
     .eq('tournament_id', tournament.id)
     .order('match_date', { ascending: true })
 
-  const sportColor = sport?.slug === 'basket' ? 'orange'
-    : sport?.slug === 'renang' ? 'cyan'
-    : 'primary'
+  const sportSlug = sport?.slug === 'renang' ? 'renang' : sport?.slug === 'basket' ? 'basketball' : 'futsal'
 
   return (
     <div className="min-h-screen bg-light">
@@ -53,7 +52,7 @@ export default async function TournamentDetailPage({ params }: PageProps) {
         <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
-              <Link href={`https://${sport?.slug === 'renang' ? 'renang' : sport?.slug === 'basket' ? 'basketball' : 'futsal'}.sfwinner.site`} className="hover:text-white flex items-center gap-1">
+              <Link href={`https://${sportSlug}.sfwinner.site`} className="hover:text-white flex items-center gap-1">
                 <ArrowLeft className="w-4 h-4" />
                 {sport?.name || 'Sport'} Portal
               </Link>
@@ -126,88 +125,12 @@ export default async function TournamentDetailPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Matches */}
-        <section>
-          <h2 className="text-lg font-bold text-dark font-heading mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary" />
-            Match Schedule & Results
-          </h2>
-
-          {matches && matches.length > 0 ? (
-            <div className="space-y-4">
-              {matches.map((match: any) => {
-                const baseUrl = `https://${sport?.slug === 'renang' ? 'renang' : sport?.slug === 'basket' ? 'basketball' : 'futsal'}.sfwinner.site`
-                return (
-                  <div key={match.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs text-gray-500">
-                        {match.match_date && new Date(match.match_date).toLocaleDateString('id-ID', {
-                          day: 'numeric', month: 'short', year: 'numeric',
-                          hour: '2-digit', minute: '2-digit'
-                        })}
-                      </span>
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        match.status === 'completed' ? 'bg-green-100 text-green-700' :
-                        match.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
-                        'bg-gray-100 text-gray-600'
-                      }`}>
-                        {match.status}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <Link href={`${baseUrl}/team/${match.team_home?.slug}`} className="flex-1 text-center group">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                          {match.team_home?.logo_url ? (
-                            <img src={match.team_home.logo_url} alt={match.team_home?.name} className="w-8 h-8 object-contain" />
-                          ) : (
-                            <span className="text-xl">🏅</span>
-                          )}
-                        </div>
-                        <p className="font-semibold text-dark text-sm group-hover:text-primary transition">
-                          {match.team_home?.name || 'TBD'}
-                        </p>
-                      </Link>
-
-                      <div className="px-6">
-                        {match.status === 'completed' ? (
-                          <span className="text-3xl font-bold text-dark">
-                            {match.score_home} <span className="text-gray-300 mx-2">—</span> {match.score_away}
-                          </span>
-                        ) : (
-                          <span className="text-lg font-semibold text-gray-400">vs</span>
-                        )}
-                      </div>
-
-                      <Link href={`${baseUrl}/team/${match.team_away?.slug}`} className="flex-1 text-center group">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                          {match.team_away?.logo_url ? (
-                            <img src={match.team_away.logo_url} alt={match.team_away?.name} className="w-8 h-8 object-contain" />
-                          ) : (
-                            <span className="text-xl">🏅</span>
-                          )}
-                        </div>
-                        <p className="font-semibold text-dark text-sm group-hover:text-primary transition">
-                          {match.team_away?.name || 'TBD'}
-                        </p>
-                      </Link>
-                    </div>
-
-                    {match.venue && (
-                      <p className="text-xs text-gray-400 text-center mt-3">
-                        📍 {match.venue}
-                      </p>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-              <p className="text-gray-500">Belum ada match untuk tournament ini.</p>
-            </div>
-          )}
-        </section>
+        {/* Tabs: Matches, Standings, Stats */}
+        <TournamentContent
+          tournamentSlug={slug}
+          sportSlug={sportSlug}
+          initialMatches={matches || []}
+        />
       </main>
 
       {/* Footer */}
