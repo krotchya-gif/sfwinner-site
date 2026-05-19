@@ -21,6 +21,10 @@ CREATE INDEX IF NOT EXISTS idx_attendance_event_date ON attendance(event_date);
 -- RLS
 ALTER TABLE attendance ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if any
+DROP POLICY IF EXISTS "Attendance viewable by authenticated" ON attendance;
+DROP POLICY IF EXISTS "Attendance editable by team" ON attendance;
+
 -- Attendance is viewable by authenticated users
 CREATE POLICY "Attendance viewable by authenticated" ON attendance FOR SELECT USING (true);
 

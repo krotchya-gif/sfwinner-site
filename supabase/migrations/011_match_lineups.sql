@@ -20,6 +20,10 @@ CREATE INDEX IF NOT EXISTS idx_match_lineups_player ON match_lineups(player_id);
 -- RLS
 ALTER TABLE match_lineups ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if any
+DROP POLICY IF EXISTS "Match lineups viewable by authenticated" ON match_lineups;
+DROP POLICY IF EXISTS "Match lineups editable by team" ON match_lineups;
+
 -- Lineups viewable by authenticated users
 CREATE POLICY "Match lineups viewable by authenticated" ON match_lineups FOR SELECT USING (true);
 
