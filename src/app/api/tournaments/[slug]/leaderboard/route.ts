@@ -45,8 +45,10 @@ export async function GET(
     }> = {};
 
     matches?.forEach(match => {
-      const homeId = match.team_home?.id;
-      const awayId = match.team_away?.id;
+      const homeTeam = (match.team_home as any) as { id: string; name: string } | null;
+      const awayTeam = (match.team_away as any) as { id: string; name: string } | null;
+      const homeId = homeTeam?.id;
+      const awayId = awayTeam?.id;
 
       if (!homeId || !awayId) return;
 
@@ -54,7 +56,7 @@ export async function GET(
       if (!standings[homeId]) {
         standings[homeId] = {
           team_id: homeId,
-          team_name: match.team_home?.name || 'Unknown',
+          team_name: homeTeam?.name || 'Unknown',
           played: 0,
           won: 0,
           drawn: 0,
@@ -67,7 +69,7 @@ export async function GET(
       if (!standings[awayId]) {
         standings[awayId] = {
           team_id: awayId,
-          team_name: match.team_away?.name || 'Unknown',
+          team_name: awayTeam?.name || 'Unknown',
           played: 0,
           won: 0,
           drawn: 0,
@@ -131,15 +133,16 @@ export async function GET(
     }> = {};
 
     playerStats?.forEach(stat => {
-      if (!stat.player?.id || !stat.goals) return;
-      const pid = stat.player.id;
+      const player = (stat.player as any) as { id: string; display_name: string; photo_url: string | null; team_id: string; teams?: { name: string } } | null;
+      if (!player?.id || !stat.goals) return;
+      const pid = player.id;
       if (!scorers[pid]) {
         scorers[pid] = {
           player_id: pid,
-          player_name: stat.player.display_name,
-          photo_url: stat.player.photo_url,
-          team_name: (stat.player as any).teams?.name || 'Unknown',
-          team_id: stat.player.team_id,
+          player_name: player.display_name,
+          photo_url: player.photo_url,
+          team_name: player.teams?.name || 'Unknown',
+          team_id: player.team_id,
           total_goals: 0
         };
       }

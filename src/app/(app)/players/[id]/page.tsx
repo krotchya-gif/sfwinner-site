@@ -83,6 +83,13 @@ export default async function PlayerDetailPage({
           <div className="flex items-center gap-2">
             <PromoteButton playerId={playerData.id} currentAgeClass={playerData.age_class?.name} />
             <Link
+              href={`/players/${id}/stats`}
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+            >
+              <Award className="w-4 h-4" />
+              Stats
+            </Link>
+            <Link
               href={`/players/${id}/edit`}
               className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
             >
