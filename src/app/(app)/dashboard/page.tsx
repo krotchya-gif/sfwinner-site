@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
-import { Users, Calendar, Award, TrendingUp, Plus, ChevronRight } from 'lucide-react'
+import { Users, Calendar, Award, TrendingUp, Plus } from 'lucide-react'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -181,11 +181,6 @@ export default async function DashboardPage() {
             ))}
           </div>
         </div>
-      )}
-
-      {/* Upcoming Matches */}
-      {team && (
-        <UpcomingMatchesWidget teamId={team.id} />
       )}
     </div>
   )
