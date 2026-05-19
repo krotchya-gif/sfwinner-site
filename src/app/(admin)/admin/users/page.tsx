@@ -78,8 +78,11 @@ export default function AdminUsersPage() {
     }
 
     const loadTeams = async () => {
-      const { data } = await supabase.from('teams').select('id, name, sports(*)').order('name')
-      setTeams(data || [])
+      const { data } = await supabase
+        .from('teams')
+        .select('id, name, sports: sports(name, slug)')
+        .order('name')
+      setTeams((data as any) || [])
     }
 
     loadData()

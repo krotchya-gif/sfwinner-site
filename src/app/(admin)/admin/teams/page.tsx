@@ -35,7 +35,7 @@ export default function AdminTeamsPage() {
     const { data: sportsData } = await supabase.from('sports').select('*').order('name')
     setSports(sportsData || [])
 
-    let query = supabase.from('teams').select('*, sports(*)').order('name')
+    let query = supabase.from('teams').select('*, sports: sports(*)').order('name')
     if (sportFilter) {
       const sport = sportsData?.find(s => s.slug === sportFilter)
       if (sport) query = query.eq('sport_id', sport.id)

@@ -39,8 +39,8 @@ export default function AdminPlayersPage() {
     setLoading(true)
     const [{ data: sportsData }, { data: teamsData }, { data: playersData }] = await Promise.all([
       supabase.from('sports').select('*').order('name'),
-      supabase.from('teams').select('*, sports(*)').order('name'),
-      supabase.from('players').select('*, teams(*, sports(*)), age_classes(*)').order('display_name')
+      supabase.from('teams').select('*, sports: sports(*)').order('name'),
+      supabase.from('players').select('*, teams(*, sports: sports(*)), age_classes(*)').order('display_name')
     ])
     setSports(sportsData || [])
     setTeams(teamsData || [])

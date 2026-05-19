@@ -52,7 +52,7 @@ export default function AdminTournamentsPage() {
 
   const loadData = async () => {
     const [{ data: tourData }, { data: sportsData }] = await Promise.all([
-      supabase.from('tournaments').select('*, sports(*)').order('start_date', { ascending: false }),
+      supabase.from('tournaments').select('*, sports: sports(*)').order('start_date', { ascending: false }),
       supabase.from('sports').select('*').order('name')
     ])
     setTournaments(tourData || [])
