@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Trophy, Target } from 'lucide-react'
+import { Calendar, Trophy, Target, Medal } from 'lucide-react'
 import StandingsTable from './StandingsTable'
 import TournamentStats from './TournamentStats'
+import Leaderboard from './Leaderboard'
 
 interface Tab {
-  id: 'matches' | 'standings' | 'stats'
+  id: 'matches' | 'standings' | 'stats' | 'leaderboard'
   label: string
   icon: any
 }
@@ -15,6 +16,7 @@ const tabs: Tab[] = [
   { id: 'matches', label: 'Matches', icon: Calendar },
   { id: 'standings', label: 'Standings', icon: Trophy },
   { id: 'stats', label: 'Stats', icon: Target },
+  { id: 'leaderboard', label: 'Top Scorers', icon: Medal },
 ]
 
 interface Match {
@@ -45,7 +47,7 @@ export default function TournamentTabs({
   stats,
   ageClasses,
 }: TournamentTabsProps) {
-  const [activeTab, setActiveTab] = useState<'matches' | 'standings' | 'stats'>('matches')
+  const [activeTab, setActiveTab] = useState<'matches' | 'standings' | 'stats' | 'leaderboard'>('matches')
 
   const baseUrl = `https://${sportSlug}.sfwinner.site`
 
@@ -148,6 +150,11 @@ export default function TournamentTabs({
       {/* Stats Tab */}
       {activeTab === 'stats' && (
         <TournamentStats stats={stats} ageClasses={ageClasses} />
+      )}
+
+      {/* Leaderboard Tab */}
+      {activeTab === 'leaderboard' && (
+        <Leaderboard tournamentSlug={tournamentSlug} sportSlug={sportSlug} />
       )}
     </div>
   )

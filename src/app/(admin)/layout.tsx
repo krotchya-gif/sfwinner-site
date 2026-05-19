@@ -25,6 +25,7 @@ const adminNav = [
   { name: 'Players', href: '/admin/players', icon: Users },
   { name: 'Sports', href: '/admin/sports', icon: Shield },
   { name: 'Tournaments', href: '/admin/tournaments', icon: Calendar },
+  { name: 'Users', href: '/admin/users', icon: Users },
   { name: 'Reports', href: '/admin/reports', icon: FileSpreadsheet },
 ]
 
