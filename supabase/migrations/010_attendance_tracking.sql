@@ -21,15 +21,16 @@ CREATE INDEX IF NOT EXISTS idx_attendance_event_date ON attendance(event_date);
 -- RLS
 ALTER TABLE attendance ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies if any
+-- Drop existing policies if any (run twice due to duplicate policy names from partial runs)
 DROP POLICY IF EXISTS "Attendance viewable by authenticated" ON attendance;
+DROP POLICY IF EXISTS "Attendance editable by team" ON attendance;
 DROP POLICY IF EXISTS "Attendance editable by team" ON attendance;
 
 -- Attendance is viewable by authenticated users
 CREATE POLICY "Attendance viewable by authenticated" ON attendance FOR SELECT USING (true);
 
--- Attendance can be inserted/updated by team coaches/admins
-CREATE POLICY "Attendance editable by team" ON attendance FOR INSERT WITH CHECK (
+-- Attendance can be inserted by team coaches/admins
+CREATE POLICY "Attendance editable by insert" ON attendance FOR INSERT WITH CHECK (
     EXISTS (
         SELECT 1 FROM users
         WHERE users.id = auth.uid()
@@ -39,7 +40,8 @@ CREATE POLICY "Attendance editable by team" ON attendance FOR INSERT WITH CHECK 
     )
 );
 
-CREATE POLICY "Attendance editable by team" ON attendance FOR UPDATE USING (
+-- Attendance can be updated by team coaches/admins
+CREATE POLICY "Attendance editable by update" ON attendance FOR UPDATE USING (
     EXISTS (
         SELECT 1 FROM users
         WHERE users.id = auth.uid()

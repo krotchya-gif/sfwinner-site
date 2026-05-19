@@ -20,15 +20,17 @@ CREATE INDEX IF NOT EXISTS idx_match_lineups_player ON match_lineups(player_id);
 -- RLS
 ALTER TABLE match_lineups ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies if any
+-- Drop existing policies if any (run multiple times due to duplicate names from partial runs)
 DROP POLICY IF EXISTS "Match lineups viewable by authenticated" ON match_lineups;
+DROP POLICY IF EXISTS "Match lineups editable by team" ON match_lineups;
+DROP POLICY IF EXISTS "Match lineups editable by team" ON match_lineups;
 DROP POLICY IF EXISTS "Match lineups editable by team" ON match_lineups;
 
 -- Lineups viewable by authenticated users
 CREATE POLICY "Match lineups viewable by authenticated" ON match_lineups FOR SELECT USING (true);
 
--- Lineups editable by team coaches/admins
-CREATE POLICY "Match lineups editable by team" ON match_lineups FOR INSERT WITH CHECK (
+-- Lineups can be inserted by team coaches/admins
+CREATE POLICY "Match lineups insertable by team" ON match_lineups FOR INSERT WITH CHECK (
     EXISTS (
         SELECT 1 FROM users
         WHERE users.id = auth.uid()
@@ -36,7 +38,8 @@ CREATE POLICY "Match lineups editable by team" ON match_lineups FOR INSERT WITH 
     )
 );
 
-CREATE POLICY "Match lineups editable by team" ON match_lineups FOR UPDATE USING (
+-- Lineups can be updated by team coaches/admins
+CREATE POLICY "Match lineups updatable by team" ON match_lineups FOR UPDATE USING (
     EXISTS (
         SELECT 1 FROM users
         WHERE users.id = auth.uid()
@@ -44,7 +47,8 @@ CREATE POLICY "Match lineups editable by team" ON match_lineups FOR UPDATE USING
     )
 );
 
-CREATE POLICY "Match lineups editable by team" ON match_lineups FOR DELETE USING (
+-- Lineups can be deleted by team coaches/admins
+CREATE POLICY "Match lineups deletable by team" ON match_lineups FOR DELETE USING (
     EXISTS (
         SELECT 1 FROM users
         WHERE users.id = auth.uid()
